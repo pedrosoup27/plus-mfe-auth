@@ -1,70 +1,70 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-const API = import.meta.env.VITE_MS_AUTH_URL || "http://localhost:3001";
+export default function Login({onLoginSucceed}) 
+{
+  // feito para criar variaveis 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [erro, setErro] = useState(''); //vai guardar o texto do erro e só aparece na tela se estiver preenchido
+  const [loading, setLoading] = useState(false);// se for true, desabilita o botao de enviar e mostra ao usuario o carregamento
 
-export default function LoginPage({ onLogin }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  //funçao que roda quando clica no botao entrar
+  const handleLogin = async (evento) => {
+    evento.preventDefault();  //faz o navegador nao atualizar naturalmente
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    setErro(''); //ao clicar no botão, limpa os erros antigos
+    setLoading(true); //ao clicar no botao, trava ele e mostra ao usuário o carregamento
 
-    try {
-      const res = await fetch(`${API}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+    //espera um segundo para fingir que realizou um acesso no servidor
+    await new Promise(resolve => setTimeout(resolve,1000));
 
-      if (!res.ok) {
-        const { error: msg } = await res.json();
-        throw new Error(msg || "Erro ao fazer login");
+    //validacao falsa POR ENQUANTO
+    if (email === "admin@teste.com" && password === "123456") {
+
+      localStorage.setItem("tokenFake","meuTokenFake123456");
+
+      if(onLoginSucceed) {
+        onLoginSucceed();
       }
 
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("refresh", data.refresh);
-      onLogin?.(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    } else {
 
+      setErro("Email ou senha incorretos, verificar novamente.");
+
+    }
+
+    //mesmo dando certo ou errado, acabou o carregamento
+    setLoading(false);
+  }
+
+  //tela em si
   return (
-    <div style={{ maxWidth: 360, margin: "80px auto", fontFamily: "sans-serif" }}>
-      <h2>Plus — Entrar</h2>
-      <form onSubmit={handleSubmit}>
-        <label>E-mail</label>
-        <br />
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ width: "100%", marginBottom: 12 }}
-        />
-        <br />
-        <label>Senha</label>
-        <br />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ width: "100%", marginBottom: 12 }}
-        />
-        <br />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading} style={{ width: "100%" }}>
-          {loading ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
-    </div>
+    <form onSubmit={handleLogin}>
+
+    <p>Email:</p>
+    <input
+      type="email"
+      value={email}
+      onChange={(event) => setEmail(event.target.value)}
+    />
+
+    <p>Senha:</p>
+    <input
+      type="password"
+      value={password}
+      onChange={(event) => setPassword(event.target.value)}
+    />
+
+    <br /><br />
+
+    {erro && (
+      <p style={{color: 'red', fontWeight: 'bold'}}>{erro}</p> /* se tiver algum texto dentro da variavel erro, APARECE e em vermelho*/
+    )}
+
+    <button type='submit' disabled={loading}>
+      {loading ? "Carregando..." : "Entrar"}
+    </button>
+    
+    </form>
   );
 }
