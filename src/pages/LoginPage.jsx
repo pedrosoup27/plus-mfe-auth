@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-export default function Login({onLoginSucceed}) 
+// 1. Adicionamos o onIrParaCadastro aqui
+export default function Login({ onLoginSucceed, onIrParaCadastro }) 
 {
   // feito para criar variaveis 
   const [email, setEmail] = useState('');
@@ -39,34 +40,47 @@ export default function Login({onLoginSucceed})
 
   //tela em si
   return (
-    <form onSubmit={handleLogin}>
+    // 2. Colocamos uma <div> global envolvendo tudo
+    <div>
+      <form onSubmit={handleLogin}>
 
-    <p>Email:</p>
-    <input
-      type="email"
-      value={email}
-      onChange={(event) => setEmail(event.target.value)}
-    />
+        <p>Email:</p>
+        <input
+          type="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
 
-    <p>Senha:</p>
-    <input
-      type="password"
-      value={password}
-      onChange={(event) => setPassword(event.target.value)}
-    />
+        <p>Senha:</p>
+        <input
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
 
-    <br /><br />
+        <br /><br />
 
-    {erro && (
-      <p style={{color: 'red', fontWeight: 'bold'}}>{erro}</p> /* se tiver algum texto dentro da variavel erro, APARECE e em vermelho*/
-    )}
+        {erro && (
+          <p style={{color: 'red', fontWeight: 'bold'}}>{erro}</p> /* se tiver algum texto dentro da variavel erro, APARECE e em vermelho*/
+        )}
 
-    <button type='submit' disabled={loading}>
-      {loading ? "Carregando..." : "Entrar"}
-    </button>
-    
-    </form>
+        <button type='submit' disabled={loading}>
+          {loading ? "Carregando..." : "Entrar"}
+        </button>
+      
+      </form>
 
-    
+      
+      <div style={{ marginTop: "20px" }}>
+        <button 
+          type="button" 
+          onClick={onIrParaCadastro} 
+          style={{ background: "transparent", border: "none", color: "blue", cursor: "pointer", textDecoration: "underline" }}
+        >
+          Ainda não tem conta? Criar agora
+        </button>
+      </div>
+
+    </div>
   );
 }
