@@ -6,21 +6,38 @@ export default function RegisterPage({onRegisterSucceed, onVoltar}) {
     //estado inicial sempre vai começar como vendedor
     const [role, setRole] = useState("vendedor");
     const [mensagem, setMensagem] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleCadastro = (e) => {
+    const handleCadastro = async (e) => {
         e.preventDefault(); //faz a pagina nao recarregar em cada requisição
+        setMensagem("");
+        setLoading(true);
 
-        //simulacao rapida de validacao
-        if (email !== "" && senha !== ""){
-            setMensagem("Usuário criado!");
+        try {
+          const resposta = await fetch('http://localhost:3001/auth/cadastro', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: email, password: senha, role: role})
+          });
 
-            //avisar o shell que deu certo
-            if(onRegisterSucceed){
-                onRegisterSucceed({novoEmail: email, cargo: role});
+          const dados = await resposta.json();
+
+          if(resposta.ok) {
+            setMensagem("Usuário criado no banco");
+
+            if(onRegisterSucceed) {
+              onRegisterSucceed({novoEmail: email, cargo: role});
             }
-        } else {
-            setMensagem("Preencha todos os campos por obiséquio");
+          } else {
+            setMensagem(dados.error || "Erro ao criar usuário");
+          }
+        } catch (error) {
+          setMensagem("Erro de conexão.")
         }
+
+        setLoading(false);
     };
 
     return (
@@ -69,10 +86,10 @@ export default function RegisterPage({onRegisterSucceed, onVoltar}) {
 
       </form>
 
-      {/* Mensagem de erro ou sucesso */}
+      {/* fala se deu erro ou sucesso */}
       {mensagem && <p style={{ color: mensagem.includes("sucesso") ? "green" : "red" }}>{mensagem}</p>}
 
-      {/* Botão para voltar para a tela de login */}
+      {/* botao feito para voltar para a tela de login */}
       <div style={{ marginTop: "15px", textAlign: "center" }}>
         <button onClick={onVoltar} style={{ background: "transparent", border: "none", color: "blue", cursor: "pointer", textDecoration: "underline" }}>
           Já tenho uma conta (Voltar)

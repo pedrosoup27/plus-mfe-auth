@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 
-// Importando suas peças de Lego
-// Se eles estiverem dentro de uma pasta, mude para "./pasta/LoginPage"
+//aRQUIVO FEITO SO PARA TESTES LOCAIS
 import LoginPage from "./pages/LoginPage"; 
 import RegisterPage from "./pages/RegisterPage";
 
-// 1. O SEU LABORATÓRIO (A TV para testar)
 function Laboratorio() {
   const [telaAtual, setTelaAtual] = useState("login");
 
@@ -35,8 +33,7 @@ function Laboratorio() {
   );
 }
 
-// 2. A TOMADA NA PAREDE (Obrigatório no main.jsx)
-// Isso é o que realmente desenha o laboratório na tela do navegador
+//NAO RETIRAR, MOTOR, ISOS QUE FAZ FUNCIONAR
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Laboratorio />

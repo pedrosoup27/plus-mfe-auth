@@ -16,31 +16,39 @@ export default function Login({ onLoginSucceed, onIrParaCadastro })
     setErro(''); //ao clicar no botão, limpa os erros antigos
     setLoading(true); //ao clicar no botao, trava ele e mostra ao usuário o carregamento
 
-    //espera um segundo para fingir que realizou um acesso no servidor
-    await new Promise(resolve => setTimeout(resolve,1000));
+    try {
+      const resposta = await fetch('http://localhost:3001/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        // transforma as variáveis em um texto JSON que o back pede
+        body: JSON.stringify({ email: email, password: password})
+      });
 
-    //validacao falsa POR ENQUANTO
-    if (email === "admin@admin" && password === "admin") {
+      //ler a resposta do backend
+      const dados = await resposta.json();
 
-      localStorage.setItem("tokenFake","meuTokenFake123456");
-
-      if(onLoginSucceed) {
-        onLoginSucceed({emailDigitado: email, token: "abcdef"});
+      if(resposta.ok) {
+        //passar o token do banco para o shell
+        if(onLoginSucceed) {
+          onLoginSucceed({emailDigitado: email, token: dados.token, refresh: dados.refresh});
+        }
+      } else {
+        //se a senha inserida for errada
+        setErro(dados.error || "Acesso inválido.")
       }
-
-    } else {
-
-      setErro("Email ou senha incorretos, verificar novamente.");
-
+    } catch (error) {
+      //se nao conectar com o servidor ou se estiver desligado, vai dar esse trecho
+      setErro("Erro de conexão");
+      console.error(error);
     }
-
     //mesmo dando certo ou errado, acabou o carregamento
     setLoading(false);
   }
 
   //tela em si
   return (
-    // 2. Colocamos uma <div> global envolvendo tudo
     <div>
       <form onSubmit={handleLogin}>
 
@@ -48,14 +56,14 @@ export default function Login({ onLoginSucceed, onIrParaCadastro })
         <input
           type="email"
           value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) => setEmail(event.target.value)} required
         />
 
         <p>Senha:</p>
         <input
           type="password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) => setPassword(event.target.value)} required
         />
 
         <br /><br />
@@ -65,7 +73,7 @@ export default function Login({ onLoginSucceed, onIrParaCadastro })
         )}
 
         <button type='submit' disabled={loading}>
-          {loading ? "Carregando..." : "Entrar"}
+          {loading ? "Autenticando..." : "Entrar"}
         </button>
       
       </form>
