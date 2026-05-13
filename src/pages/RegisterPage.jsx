@@ -86,10 +86,10 @@ export default function RegisterPage({onRegisterSucceed, onVoltar}) {
 
       </form>
 
-      {/* Mensagem de erro ou sucesso */}
+      {/* fala se deu erro ou sucesso */}
       {mensagem && <p style={{ color: mensagem.includes("sucesso") ? "green" : "red" }}>{mensagem}</p>}
 
-      {/* Botão para voltar para a tela de login */}
+      {/* botao feito para voltar para a tela de login */}
       <div style={{ marginTop: "15px", textAlign: "center" }}>
         <button onClick={onVoltar} style={{ background: "transparent", border: "none", color: "blue", cursor: "pointer", textDecoration: "underline" }}>
           Já tenho uma conta (Voltar)

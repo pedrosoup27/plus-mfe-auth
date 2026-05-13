@@ -32,7 +32,7 @@ export default function Login({ onLoginSucceed, onIrParaCadastro })
       if(resposta.ok) {
         //passar o token do banco para o shell
         if(onLoginSucceed) {
-          onLoginSucceed({emailDigitado: email, token: dados.token});
+          onLoginSucceed({emailDigitado: email, token: dados.token, refresh: dados.refresh});
         }
       } else {
         //se a senha inserida for errada
@@ -49,7 +49,6 @@ export default function Login({ onLoginSucceed, onIrParaCadastro })
 
   //tela em si
   return (
-    // 2. Colocamos uma <div> global envolvendo tudo
     <div>
       <form onSubmit={handleLogin}>
 
