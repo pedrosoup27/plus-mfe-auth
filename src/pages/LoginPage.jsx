@@ -19,12 +19,12 @@ export default function Login({onLoginSucceed})
     await new Promise(resolve => setTimeout(resolve,1000));
 
     //validacao falsa POR ENQUANTO
-    if (email === "admin@teste.com" && password === "123456") {
+    if (email === "admin@admin" && password === "admin") {
 
       localStorage.setItem("tokenFake","meuTokenFake123456");
 
       if(onLoginSucceed) {
-        onLoginSucceed();
+        onLoginSucceed({emailDigitado: email, token: "abcdef"});
       }
 
     } else {
@@ -66,5 +66,7 @@ export default function Login({onLoginSucceed})
     </button>
     
     </form>
+
+    
   );
 }

@@ -1,23 +1,44 @@
-import React from "react";
-import ReactDOM from "react-dom/client"; // motor que desenha na tela
-import Login from "./pages/LoginPage";   
+import React, { useState } from "react";
+import ReactDOM from "react-dom/client";
 
-export default function App() {
+// Importando suas peças de Lego
+// Se eles estiverem dentro de uma pasta, mude para "./pasta/LoginPage"
+import LoginPage from "./pages/LoginPage"; 
+import RegisterPage from "./pages/RegisterPage";
 
-  const computarSucesso = () => {
-    alert("Tela de login foi ouvida, agora deve ser redirecionado");
-  };
+// 1. O SEU LABORATÓRIO (A TV para testar)
+function Laboratorio() {
+  const [telaAtual, setTelaAtual] = useState("login");
 
   return (
     <div>
-      {/* Caso o login tenha sucesso, vai chamar o prop e depois vai executar computar sucesso, que deve trocar de tela*/}
-      <Login onLoginSucceed={computarSucesso} />
+      {telaAtual === "login" && (
+        <LoginPage 
+          // Testando se o MFE avisa que logou
+          onLoginSucceed={(dados) => alert("Login avisou que deu certo!")} 
+          
+          // Função que vamos passar para o botão "Criar Conta" do Login
+          onIrParaCadastro={() => setTelaAtual("cadastro")} 
+        />
+      )}
+
+      {telaAtual === "cadastro" && (
+        <RegisterPage 
+          // Testando se a tela de cadastro avisa que deu certo
+          onRegisterSucceed={(dados) => alert("Criou: " + dados.novoEmail + " como " + dados.cargo)}
+          
+          // Função do botão de voltar
+          onVoltar={() => setTelaAtual("login")} 
+        />
+      )}
     </div>
   );
 }
 
+// 2. A TOMADA NA PAREDE (Obrigatório no main.jsx)
+// Isso é o que realmente desenha o laboratório na tela do navegador
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <Laboratorio />
   </React.StrictMode>
 );

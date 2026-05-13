@@ -10,7 +10,8 @@ export default defineConfig({
       filename: "remoteEntry.js",
       // Componentes expostos para o Shell consumir
       exposes: {
-        "./LoginPage": "./src/pages/LoginPage",
+        "./LoginPage": "./src/pages/LoginPage.jsx",
+        "./RegisterPage": "./src/RegisterPage.jsx"
       },
       shared: ["react", "react-dom"],
     }),
